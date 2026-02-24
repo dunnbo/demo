@@ -26,11 +26,21 @@ import {
   ArrowLeft,
   Star,
   Clock,
-  ThumbsUp
+  ThumbsUp,
+  Calendar,
+  AlertCircle,
+  CheckCircle2,
+  X
 } from 'lucide-react';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'consultation'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'consultation' | 'followup'>('home');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const handleConfirmFollowup = () => {
+    setShowConfirmModal(false);
+    setCurrentView('home');
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center font-sans text-gray-900">
@@ -136,7 +146,10 @@ export default function App() {
                     <p className="text-xs text-gray-500">送药上门服务</p>
                   </div>
                   
-                  <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer">
+                  <div 
+                    className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => setCurrentView('followup')}
+                  >
                     <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mb-3">
                       <ClipboardList size={22} />
                     </div>
@@ -475,6 +488,164 @@ export default function App() {
                 </div>
               </section>
             </main>
+          </div>
+        )}
+
+        {currentView === 'followup' && (
+          <div className="bg-gray-50 min-h-screen pb-6">
+            {/* Followup Header */}
+            <header className="px-5 pt-12 pb-4 bg-white sticky top-0 z-10 shadow-sm flex items-center">
+              <button 
+                onClick={() => setCurrentView('home')}
+                className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft size={24} />
+              </button>
+              <h1 className="text-lg font-semibold flex-1 text-center pr-8">诊后随访</h1>
+            </header>
+
+            <main className="px-5 py-4 space-y-6">
+              {/* Follow-up Application Prompt */}
+              <section>
+                <div className="bg-gradient-to-r from-teal-500 to-emerald-500 rounded-2xl p-5 text-white shadow-md relative overflow-hidden">
+                  <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <AlertCircle size={20} className="text-emerald-100" />
+                      <h2 className="text-lg font-bold">需要随访申请？</h2>
+                    </div>
+                    <p className="text-emerald-50 text-sm mb-4 leading-relaxed">
+                      如果您近期有就诊记录，可以向主治医生发起诊后随访申请，以便医生跟进您的康复情况。
+                    </p>
+                    <button 
+                      onClick={() => setShowConfirmModal(true)}
+                      className="bg-white text-teal-600 text-sm font-medium px-5 py-2 rounded-full shadow-sm hover:bg-teal-50 transition-colors w-full flex justify-center items-center"
+                    >
+                      发起随访申请
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              {/* Follow-up History */}
+              <section>
+                <h2 className="text-base font-bold text-gray-900 mb-3">随访历史</h2>
+                
+                <div className="space-y-4">
+                  {/* History Item 1 */}
+                  <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-50">
+                      <div className="flex items-center space-x-2">
+                        <span className="bg-emerald-100 text-emerald-600 text-xs px-2 py-0.5 rounded font-medium">已完成</span>
+                        <span className="text-sm text-gray-500">2023-10-15</span>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">高血压常规随访</span>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                        <img src="https://picsum.photos/seed/doc1/100/100" alt="Doctor" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">王建国 <span className="text-xs text-gray-500 font-normal ml-1">心血管内科</span></p>
+                        <p className="text-xs text-gray-500 mt-0.5">北京市第一人民医院</p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gray-50 p-3 rounded-xl text-sm text-gray-600">
+                      <p className="line-clamp-2">医生建议：血压控制良好，请继续保持当前用药方案，注意低盐饮食，适量运动。下个月复查肝肾功能。</p>
+                    </div>
+                  </div>
+
+                  {/* History Item 2 */}
+                  <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-50">
+                      <div className="flex items-center space-x-2">
+                        <span className="bg-emerald-100 text-emerald-600 text-xs px-2 py-0.5 rounded font-medium">已完成</span>
+                        <span className="text-sm text-gray-500">2023-08-22</span>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">出院后一周随访</span>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                        <img src="https://picsum.photos/seed/doc2/100/100" alt="Doctor" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">李雪梅 <span className="text-xs text-gray-500 font-normal ml-1">呼吸内科</span></p>
+                        <p className="text-xs text-gray-500 mt-0.5">北京市第一人民医院</p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gray-50 p-3 rounded-xl text-sm text-gray-600">
+                      <p className="line-clamp-2">医生建议：咳嗽症状明显减轻，肺部听诊清晰。继续服用止咳化痰药物3天，注意保暖，避免受凉。</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </main>
+          </div>
+        )}
+
+        {/* Confirmation Modal */}
+        {showConfirmModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowConfirmModal(false)}></div>
+            <div className="bg-white rounded-3xl w-full max-w-sm p-6 relative z-10 shadow-2xl transform transition-all">
+              <button 
+                onClick={() => setShowConfirmModal(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              >
+                <X size={20} />
+              </button>
+              
+              <div className="flex flex-col items-center text-center mb-6 mt-2">
+                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                  <ClipboardList size={32} className="text-[#007AFF]" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">确认随访申请</h3>
+                <p className="text-sm text-gray-500 mt-2">请确认以下随访信息</p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-2xl p-4 mb-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center text-gray-500 text-sm">
+                    <User size={16} className="mr-2" />
+                    <span>随访医生</span>
+                  </div>
+                  <span className="font-medium text-gray-900">王建国 (心血管内科)</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center text-gray-500 text-sm">
+                    <Calendar size={16} className="mr-2" />
+                    <span>随访类型</span>
+                  </div>
+                  <span className="font-medium text-gray-900">高血压复诊随访</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center text-gray-500 text-sm">
+                    <Clock size={16} className="mr-2" />
+                    <span>预计时间</span>
+                  </div>
+                  <span className="font-medium text-[#007AFF]">明天 14:00 - 16:00</span>
+                </div>
+              </div>
+              
+              <div className="flex space-x-3">
+                <button 
+                  onClick={() => setShowConfirmModal(false)}
+                  className="flex-1 py-3 rounded-xl text-gray-600 font-medium bg-gray-100 hover:bg-gray-200 transition-colors"
+                >
+                  取消
+                </button>
+                <button 
+                  onClick={handleConfirmFollowup}
+                  className="flex-1 py-3 rounded-xl text-white font-medium bg-[#007AFF] hover:bg-blue-600 transition-colors shadow-md shadow-blue-500/30"
+                >
+                  确认申请
+                </button>
+              </div>
+            </div>
           </div>
         )}
         
